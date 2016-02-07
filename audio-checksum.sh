@@ -37,7 +37,7 @@ process_args() {
 	2)
 	    case $1 in
 		"-c" | "--check")
-		# Chect the checksums in the file
+		check_checksums "$2"
 		;;
 		*)
 		    error "Unknown argument: $1" 3
@@ -48,6 +48,27 @@ process_args() {
 	    error "Too many arguments" 4
 	    ;;
     esac
+}
+
+check_checksums() {
+    local chksumfile="$1"
+    # Lines starting with `#' are treated as comments and are not processed
+    grep -ve '^#.*' "$chksumfile" | cut -d '*' -f 2- | while read f
+    do
+	if [ -f "$f" ]
+	then
+	    grep -F "$(create_checksum "$f")" "$chksumfile"
+	    
+	    if [ $? -eq 0 ]
+	    then
+		echo "$f: OK"
+	    else
+		echo "$f: FAILED"
+	    fi
+	else
+	    echo "$0: $f: No such file or directory"
+	fi
+    done
 }
 
 calc_checksum() {
