@@ -52,8 +52,14 @@ process_args() {
 
 check_checksums() {
     local chksumfile="$1"
+    local cnt_failures=0
+    local cnt_missing=0
+    local ret_code=0
+    # Setting the internal field separator, only to split words by newlines in
+    # for loop
+    IFS=$'\n'
     # Lines starting with `#' are treated as comments and are not processed
-    grep -ve '^#.*' "$chksumfile" | cut -d '*' -f 2- | while read f
+    for f in $(grep -ve '^#.*' "$chksumfile" | cut -d '*' -f 2-)
     do
 	if [ -f "$f" ]
 	then
@@ -63,12 +69,25 @@ check_checksums() {
 	    then
 		echo "$f: OK"
 	    else
+		((cnt_failures++))
 		echo "$f: FAILED"
+		ret_code=1
 	    fi
 	else
+	    ((cnt_missing++))
 	    echo "$0: $f: No such file or directory"
+	    ret_code=1
 	fi
     done
+    if [ $cnt_missing -ne 0 ]
+    then
+	echo "$0: WARNING: $cnt_missing listed files could not be read"
+    fi
+    if [ $cnt_failures -ne 0 ]
+    then
+	echo "$0: WARNING: $cnt_failures computed checksum did NOT match"
+    fi
+    return $ret_code
 }
 
 calc_checksum() {
