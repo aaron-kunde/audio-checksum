@@ -7,5 +7,6 @@ In general this script shall behave similar to the usual tools in GNU coreutils 
 
 To clear all tags from the temporary audio file an external tag editor is needed. In this script operon (http://quodlibet.readthedocs.org/en/latest/guide/commands/operon.html) is used.
 
-The is also able to take an existing file with checksums and check those, like the tools from GNU coreutils.
+The script is also able to take an existing file with checksums and check those, like the tools from GNU coreutils.
 In constrast to the other tools, it is not possible to pass multiplel filenames to the script in order to calculate their checksums.
+
