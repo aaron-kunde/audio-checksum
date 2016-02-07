@@ -14,7 +14,16 @@ process_args() {
 }
 
 calc_checksum() {
-    md5sum "$1"
+    local audio="$1"
+    local tmp="$audio.tmp"
+    local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g')
+    local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g')
+
+    cp "$audio" "$tmp"
+
+    md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
+
+    rm "$tmp"
 }
 
 main() {
