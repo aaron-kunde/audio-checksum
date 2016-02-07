@@ -7,16 +7,47 @@ clear_tags() {
 }
 
 print_usage() {
-    echo "Usage: $0 FILE"
+    echo "Usage: $0 [-c|--check] FILE"
+}
+
+error() {
+    local msg=$1
+    local err_code=$2
+    echo "ERROR: $msg"
+    print_usage
+
+    exit $err_code
 }
 
 process_args() {
-    if [ $# -ne 1 ]
-    then
-	echo "ERROR"
-	print_usage
-	exit 1
-    fi
+    case $# in
+	0)
+	    error "Not enough arguments" 1
+	    ;;
+	1)
+	    case $1 in
+		"-c" | "--check")
+		    error "Missing FILE arguments" 2
+		    ;;
+		*)
+		    calc_checksum "$1"
+		    ;;
+	    esac
+	    ;;
+	2)
+	    case $1 in
+		"-c" | "--check")
+		# Chect the checksums in the file
+		;;
+		*)
+		    error "Unknown argument: $1" 3
+		    ;;
+	    esac
+	    ;;
+	*)
+	    error "Too many arguments" 4
+	    ;;
+    esac
 }
 
 calc_checksum() {
@@ -39,7 +70,6 @@ calc_checksum() {
 
 main() {
     process_args "$@"
-    calc_checksum "$1"
 }
 
 main "$@"
