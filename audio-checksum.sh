@@ -57,7 +57,7 @@ check_checksums() {
     do
 	if [ -f "$f" ]
 	then
-	    grep -F "$(create_checksum "$f")" "$chksumfile"
+	    grep -qF "$(calc_checksum "$f")" "$chksumfile"
 	    
 	    if [ $? -eq 0 ]
 	    then
