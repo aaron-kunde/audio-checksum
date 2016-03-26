@@ -5,8 +5,8 @@ Checksum tools like md5sum regarding everything in a file to calculate the check
 
 In general this script shall behave similar to the usual tools in GNU coreutils (http://www.gnu.org/software/coreutils/coreutils.html) for calculating checksums (md5sum, sha1sum, ...). To calculate a checksum for a file, one of these is used. The actual implementation uses md5sum to calculate MD5 checksums
 
-To clear all tags from the temporary audio file an external tag editor is needed. In this script operon (http://quodlibet.readthedocs.org/en/latest/guide/commands/operon.html) is used.
+The first appproach, using a tagger to remove all tags, is not perfect, since different taggers behave differently. For instance, operon  Musicbrainz picard (https://picard.musicbrainz.org/) produce different files with differenz checksums by "cleaning" all tags.
+Therefore a different approach is now taken: The audiostrem is dumped by MPlayer with. This produces a dump file with the same codec, but without any tags. Then the checksum of the dumped file is calculated and used.
 
 The script is also able to take an existing file with checksums and check those, like the tools from GNU coreutils.
 In constrast to the other tools, it is not possible to pass multiple filenames to the script in order to calculate their checksums.
-

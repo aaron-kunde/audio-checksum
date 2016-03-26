@@ -1,9 +1,9 @@
 #!/bin/sh
 
 clear_tags() {
-    local tmp="$1"
-    operon clear -a "$tmp"
-    operon image-clear "$tmp"
+    local src="$1"
+    local tmp="$2"
+    mplayer -really-quiet -noconsolecontrols -dumpaudio -dumpfile "$tmp" "$src"
 }
 
 print_usage() {
@@ -100,9 +100,7 @@ calc_checksum() {
     local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g')
     local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g')
 
-    cp "$audio" "$tmp"
-
-    clear_tags "$tmp"
+    clear_tags "$audio" "$tmp"
     md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
 
     rm "$tmp"
