@@ -96,9 +96,10 @@ calc_checksum() {
     # extension to work properly
     local audio_ext="${audio##**.}"
     local tmp="$audio.tmp.$audio_ext"
-    # Mask directory separators '/' for the sed script below
-    local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g')
-    local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g')
+    # Mask directory separators '/' for the sed script below and ampersand '&'
+    # to avoid putting jobs into background
+    local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
+    local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
 
     clear_tags "$audio" "$tmp"
     md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
