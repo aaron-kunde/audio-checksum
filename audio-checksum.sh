@@ -103,14 +103,18 @@ calc_checksum() {
     local tmp=$(dirname "$audio")/stream.dump
     clear_tags "$audio" "$tmp"
 
-    # Mask directory separators '/' for the sed script below and ampersand '&'
-    # to avoid putting jobs into background
-    local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
-    local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
+    if [ -f "$tmp" ]; then
+	# Mask directory separators '/' for the sed script below and ampersand '&'
+	# to avoid putting jobs into background
+	local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
+	local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
 
-    md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
+	md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
 
-    rm "$tmp"
+	rm "$tmp"
+    else
+	echo "WARNING: Could not process file '$audio'" > /dev/stderr
+    fi
 }
 
 main() {
