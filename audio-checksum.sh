@@ -1,9 +1,15 @@
 #!/bin/sh
 
 clear_tags() {
-    local src="$1"
-    local tmp="$2"
-    mplayer -really-quiet -noconsolecontrols -dumpaudio -dumpfile "$tmp" "$src"
+    local audio="$1"
+    # MPlayer and FFMpeg cannot open files with brackets '[' in the filename.
+    # Therefore we make a temporary copy of the audio file
+    local tmp_in=$(dirname "$audio")/audio.copy
+    cp "$audio" "$tmp_in"
+    local tmp_out="$2"
+
+    mplayer -really-quiet -noconsolecontrols -dumpaudio -dumpfile "$tmp_out" "$tmp_in"
+    rm "$tmp_in"
 }
 
 print_usage() {
@@ -94,14 +100,14 @@ calc_checksum() {
     local audio="$1"
     # Preserve the file extension, since some tools need the right file
     # extension to work properly
-    local audio_ext="${audio##**.}"
-    local tmp="$audio.tmp.$audio_ext"
+    local tmp=$(dirname "$audio")/stream.dump
+    clear_tags "$audio" "$tmp"
+
     # Mask directory separators '/' for the sed script below and ampersand '&'
     # to avoid putting jobs into background
     local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
     local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
 
-    clear_tags "$audio" "$tmp"
     md5sum "$tmp" | sed -e s/"$masked_tmp"/"$masked_audio"/
 
     rm "$tmp"
