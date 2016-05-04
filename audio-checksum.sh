@@ -86,8 +86,6 @@ check_checksums() {
 
 calc_checksum() {
     local audio="$1"
-    # Preserve the file extension, since some tools need the right file
-    # extension to work properly
     local tmp=$(dirname "$audio")/stream.dump
     "$(dirname $0)/audio-clean.sh" "$audio" "$tmp"
 
