@@ -90,8 +90,8 @@ calc_checksum() {
     "$(dirname $0)/audio-clean.sh" "$audio" "$tmp"
 
     if [ -f "$tmp" ]; then
-	# Mask directory separators '/' for the sed script below and ampersand '&'
-	# to avoid putting jobs into background
+	# Mask directory separators '/' for the sed script below and ampersand
+	# '&' to avoid putting jobs into background
 	local masked_audio=$(echo "$audio" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
 	local masked_tmp=$(echo "$tmp" | sed -e 's/\//\\\//g' | sed -e 's/&/\\&/g')
 
