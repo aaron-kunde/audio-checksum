@@ -1,17 +1,5 @@
 #!/bin/sh
 
-clear_tags() {
-    local audio="$1"
-    # MPlayer and FFMpeg cannot open files with brackets '[' in the filename.
-    # Therefore we make a temporary copy of the audio file
-    local tmp_in=$(dirname "$audio")/audio.copy
-    cp "$audio" "$tmp_in"
-    local tmp_out="$2"
-
-    mplayer -really-quiet -noconsolecontrols -dumpaudio -dumpfile "$tmp_out" "$tmp_in"
-    rm "$tmp_in"
-}
-
 print_usage() {
     echo "Usage: $0 [-c|--check] FILE"
 }
@@ -101,7 +89,7 @@ calc_checksum() {
     # Preserve the file extension, since some tools need the right file
     # extension to work properly
     local tmp=$(dirname "$audio")/stream.dump
-    clear_tags "$audio" "$tmp"
+    "$(dirname $0)/audio-clean.sh" "$audio" "$tmp"
 
     if [ -f "$tmp" ]; then
 	# Mask directory separators '/' for the sed script below and ampersand '&'
