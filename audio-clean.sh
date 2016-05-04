@@ -3,15 +3,15 @@
 clean_tags() {
     local in_file="$1"
     local out_file="$2"
+    local extension="${in_file##*.}"
+    local tmp_in=$(dirname "$in_file")/audio.$extension
 
-    # MPlayer and FFMpeg cannot open files with brackets '[' in the filename.
-    # Therefore we make a temporary copy of the audio file
-    local tmp_in=$(dirname "$in_file")/audio.copy
     cp "$in_file" "$tmp_in"
     
-    mplayer -really-quiet -noconsolecontrols -dumpaudio -dumpfile "$out_file" "$tmp_in"
+    operon clear -a "$tmp_in"
+    operon image-clear "$tmp_in"
 
-    rm "$tmp_in"
+    mv "$tmp_in" "$out_file"
 }
 
 print_usage() {
