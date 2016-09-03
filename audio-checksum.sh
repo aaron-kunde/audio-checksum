@@ -1,6 +1,6 @@
 #!/bin/sh
 
-AUDIO_CLEAN_CMD="$(dirname $0)/audio-clean.sh"
+AUDIO_CLEAN_CMD="$(dirname $0)/audio-clean.operon.sh"
 
 print_usage() {
     echo "Usage: $0 [-c|--check] FILE"
