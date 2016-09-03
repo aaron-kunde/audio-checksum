@@ -1,5 +1,7 @@
 #!/bin/sh
 
+AUDIO_CLEAN_CMD="$(dirname $0)/audio-clean.sh"
+
 print_usage() {
     echo "Usage: $0 [-c|--check] FILE"
 }
@@ -87,7 +89,7 @@ check_checksums() {
 calc_checksum() {
     local audio="$1"
     local tmp=$(dirname "$audio")/stream.dump
-    "$(dirname $0)/audio-clean.sh" "$audio" "$tmp"
+    $AUDIO_CLEAN_CMD "$audio" "$tmp"
 
     if [ -f "$tmp" ]; then
 	# Mask directory separators '/' for the sed script below and ampersand
