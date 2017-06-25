@@ -35,7 +35,7 @@ process_args() {
 }
 
 main() {
-    process_args "$@"
+    which operon && process_args "$@"
 }
 
 main "$@"

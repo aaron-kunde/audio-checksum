@@ -35,7 +35,7 @@ process_args() {
 }
 
 main() {
-    process_args "$@"
+    which mplayer && process_args "$@"
 }
 
 main "$@"
