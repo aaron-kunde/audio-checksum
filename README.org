@@ -1,0 +1,14 @@
+* audio-checksum
+  This project contains a shell-Skript, which produces MD5-Checksums of audio files (like .ogg, .mp3, .flac...).
+
+Checksum tools like md5sum regarding everything in a file to calculate the checksum. I only want to know, if the audio data without tags (comments, author, images, ...) has changed. Therefore, a tempporary copy is made for each file, from which all tags are removed. Then the checksum is calculated.
+
+In general this script shall behave similar to the usual tools in [[http://www.gnu.org/software/coreutils/coreutils.html][GNU coreutils]] for calculating checksums (md5sum, sha1sum, ...). To calculate a checksum for a file, one of these is used. The actual implementation uses md5sum to calculate MD5 checksums.
+
+Two versions to clean an audiofile of its tags are available:
+
+1. The first appproach uses [[https://quodlibet.readthedocs.io][operon]] and is implemented in the script `audio-clean.operon.sh`. In general, using a tagger to remove all tags, is not perfect, since different taggers behave differently. For instance, operon  and  [[https://picard.musicbrainz.org/][Musicbrainz Picard]] produce different files with different checksums by "cleaning" all tags.
+2. The second approach uses [[http://www.mplayerhq.hu][MPlayer]] to dump an audiostream and is implemented in the script `audio-clean.mplayer.sh`. This produces a dump file with the same codec, but without any tags. Then the checksum of the dumped file is calculated and used. Unfortnutately Mplayer destroys OGG-files during this procedure.
+
+The script is also able to take an existing file with checksums and check those, like the tools from GNU coreutils.
+In constrast to the other tools, it is not possible to pass multiple filenames to the script in order to calculate their checksums.
